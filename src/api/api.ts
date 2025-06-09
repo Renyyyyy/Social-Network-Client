@@ -10,4 +10,5 @@ export const pingBackend = async () => {
     console.error('Ошибка подключения к бэкенду:', error);
     throw error;
   }
+  
 };
