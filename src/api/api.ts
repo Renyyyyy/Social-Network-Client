@@ -1,14 +1,13 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:7000/api/health'; 
+const API_URL = 'http://localhost:7000/api'; 
 
 export const pingBackend = async () => {
   try {
-    const response = await axios.get(`${API_URL}/ping`);
+    const response = await axios.get(`${API_URL}/health/ping`);
     return response.data;
   } catch (error) {
     console.error('Ошибка подключения к бэкенду:', error);
     throw error;
   }
-  
 };
