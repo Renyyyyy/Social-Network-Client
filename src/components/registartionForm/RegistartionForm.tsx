@@ -1,18 +1,17 @@
 import React, { useState } from 'react';
-import './LoginForm.css';
+import './RegistartionForm.css';
 import Button from '../button/Button';
 import Card from '../card/Card';
-import Checkbox from '../checkbox/Checkbox';
 import InputField from '../inputField/InputField';
 
-interface LoginFormProps {
-  onSignUpClick: () => void;
+interface RegistartionFormProps {
+  onBackToLogin: () => void;
 }
 
-const LoginForm: React.FC<LoginFormProps> = ({ onSignUpClick }) => {
+const RegistartionForm: React.FC<RegistartionFormProps> = ({ onBackToLogin }) => {
+    const [nickname, setNickname] = useState('');
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
-    const [rememberMe, setRememberMe] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -26,13 +25,20 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSignUpClick }) => {
         e.preventDefault();
     };
 
-
-
     return (
-        <Card className="login-card">
-            <h2 className="login-title">Авторизация</h2>
+        <Card className="registartion-card">
+            <h2 className="registartion-title">Регистрация</h2>
             
-            <form onSubmit={handleSubmit} className="login-form">
+            <form onSubmit={handleSubmit} className="registartion-form">
+                <InputField
+                    type="nickname"
+                    label="Nickname"
+                    placeholder="nickname"
+                    value={nickname}
+                    onChange={setNickname}
+                    required
+                />
+
                 <InputField
                     type="login"
                     label="Login"
@@ -51,33 +57,25 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSignUpClick }) => {
                     required
                 />
                 
-                <div className="login-options">
-                  <Checkbox
-                      id="remember-me"
-                      label="Remember me"
-                      checked={rememberMe}
-                      onChange={setRememberMe}
-                  />
-              </div>
                 
                 <Button
                     type="submit"
                     isLoading={isLoading}
-                    disabled={!login || !password}
+                    disabled={!nickname || !login || !password}
                 >
-                    Войти
+                    Зарегистрироваться
                 </Button>
             </form>
-            
-            <div className="login-footer">
+
+             <div className="registartion-footer">
                 <p className="footer-text">
-                    Ещё нет аккаунта?{' '}
+                    Уже есть аккаунт?{' '}
                     <button 
                         type="button"
-                        className="signup-link"
-                        onClick={onSignUpClick} // Используем пропс
+                        className="back-to-login-link"
+                        onClick={onBackToLogin}
                     >
-                        Зарегистрироваться
+                        Войти
                     </button>
                 </p>
             </div>
@@ -85,4 +83,4 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSignUpClick }) => {
     );
 };
 
-export default LoginForm;
+export default RegistartionForm;

@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { pingBackend } from '../../api/api';
 import './AuthChecker.css';
 import LoginForm from '../loginForm/LoginForm';
+import RegistartionForm from '../registartionForm/RegistartionForm';
 
 const AuthChecker: React.FC = () => {
   const [status, setStatus] = useState<'checking' | 'online' | 'offline'>('checking');
-  
+  const [activeForm, setActiveForm] = useState<'login' | 'registration'>('login');
+
   useEffect(() => {
     const checkBackend = async () => {
         try {
@@ -18,7 +20,7 @@ const AuthChecker: React.FC = () => {
     };
 
     checkBackend();
-    }, []);
+  }, []);
 
   return (
     <>
@@ -29,7 +31,13 @@ const AuthChecker: React.FC = () => {
         </div>
       )}
 
-      {status === 'online' && <LoginForm />}
+      {status === 'online' && activeForm === 'login' && (
+        <LoginForm onSignUpClick={() => setActiveForm('registration')} />
+      )}
+      
+      {status === 'online' && activeForm === 'registration' && (
+        <RegistartionForm onBackToLogin={() => setActiveForm('login')} />
+      )}
       
       {status === 'offline' && (
         <div className="status-message error">

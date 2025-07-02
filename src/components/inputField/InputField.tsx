@@ -2,7 +2,7 @@ import React from 'react';
 import './InputField.css';
 
 interface InputFieldProps {
-    type: 'text' | 'login' | 'password';
+    type: 'text' | 'login' | 'password' | 'nickname';
     label: string;
     placeholder: string;
     value: string;

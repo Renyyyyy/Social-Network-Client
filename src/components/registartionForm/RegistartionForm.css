@@ -1,10 +1,10 @@
-  .login-card {
+  .registration-card {
     display: flex;
     flex-direction: column;
     align-items: center;
   }
   
-  .login-title {
+  .registration-title {
     font-size: 1.5rem;
     font-weight: 700;
     color: #1e293b;
@@ -12,11 +12,11 @@
     text-align: center;
   }
   
-  .login-form {
+  .registration-form {
     width: 90%;
   }
   
-  .login-options {
+  .registration-options {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -33,7 +33,7 @@
     text-decoration: underline;
   }
   
-  .login-footer {
+  .registration-footer {
     margin-top: 1.5rem;
     text-align: center;
   }
@@ -68,3 +68,22 @@
   .signup-link:hover {
       text-decoration: underline;
   }
+  .registartion-footer {
+    margin-top: 15px;
+    text-align: center;
+}
+
+.back-to-login-link {
+    background: none;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+    padding: 0;
+    font-size: inherit;
+    text-decoration: underline;
+}
+
+.back-to-login-link:hover {
+    color: #0056b3;
+    text-decoration: none;
+}
