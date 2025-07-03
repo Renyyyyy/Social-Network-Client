@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import './RegistartionForm.css';
-import Button from '../button/Button';
-import Card from '../card/Card';
-import InputField from '../inputField/InputField';
+import Button from '../../common/button/Button';
+import Card from '../../common/card/Card';
+import InputField from '../../common/inputField/InputField';
+
 
 interface RegistartionFormProps {
   onBackToLogin: () => void;

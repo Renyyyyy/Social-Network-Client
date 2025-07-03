@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import './LoginForm.css';
-import Button from '../button/Button';
-import Card from '../card/Card';
-import Checkbox from '../checkbox/Checkbox';
-import InputField from '../inputField/InputField';
+import Card from '../../common/card/Card';
+import Button from '../../common/button/Button';
+import Checkbox from '../../common/checkbox/Checkbox';
+import InputField from '../../common/inputField/InputField';
 
 interface LoginFormProps {
   onSignUpClick: () => void;

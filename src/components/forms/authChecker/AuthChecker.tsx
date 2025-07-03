@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { pingBackend } from '../../api/api';
 import './AuthChecker.css';
 import LoginForm from '../loginForm/LoginForm';
 import RegistartionForm from '../registartionForm/RegistartionForm';
+import { pingBackend } from '../../../api/api';
 
 const AuthChecker: React.FC = () => {
   const [status, setStatus] = useState<'checking' | 'online' | 'offline'>('checking');
