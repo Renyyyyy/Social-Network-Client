@@ -42,3 +42,12 @@
   .retry-button:hover {
     background-color: #1d4ed8;
   }
+
+  .auth-checker-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 100vh; /* Занимает всю высоту экрана */
+  padding: 1rem;
+}

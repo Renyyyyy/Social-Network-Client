@@ -1,21 +1,20 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './LoginForm.css';
-import Card from '../../common/card/Card';
+import './RegistrationForm.css';
 import Button from '../../common/button/Button';
-import Checkbox from '../../common/checkbox/Checkbox';
+import Card from '../../common/card/Card';
 import InputField from '../../common/inputField/InputField';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
-import { selectAuthStatus, selectAuthError, loginUser } from '../../../store/slices/authSlice';
+import { selectAuthStatus, selectAuthError, registerUser } from '../../../store/slices/authSlice';
 
-interface LoginFormProps {
-  onSignUpClick?: () => void;
+interface RegistrationFormProps {
+  onBackToLogin?: () => void;
 }
 
-const LoginForm: React.FC<LoginFormProps> = ({ onSignUpClick }) => {
+const RegistrationForm: React.FC<RegistrationFormProps> = ({ onBackToLogin }) => {
+    const [name, setName] = useState('');
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
-    const [rememberMe, setRememberMe] = useState(false);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const status = useAppSelector(selectAuthStatus);
@@ -24,24 +23,33 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSignUpClick }) => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const result = await dispatch(loginUser({ login, password })).unwrap();
+            const result = await dispatch(registerUser({ name, login, password })).unwrap();
             localStorage.setItem('accessToken', result.token);
             
             navigate('/users');
         } catch (err) {
-            console.error('Login error:', err);
+            console.error('Registration error:', err);
         }
     };
 
     return (
-        <Card className="login-card">
-            <h2 className="login-title">Авторизация</h2>
+        <Card className="registration-card">
+            <h2 className="registration-title">Регистрация</h2>
             
             {status === 'failed' && error && (
                 <div className="error-message">{error}</div>
             )}
             
-            <form onSubmit={handleSubmit} className="login-form">
+            <form onSubmit={handleSubmit} className="registration-form">
+                <InputField
+                    type="text"
+                    label="Name"
+                    placeholder="Your name"
+                    value={name}
+                    onChange={setName}
+                    required
+                />
+
                 <InputField
                     type="text"
                     label="Login"
@@ -60,33 +68,24 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSignUpClick }) => {
                     required
                 />
                 
-                <div className="login-options">
-                  <Checkbox
-                      id="remember-me"
-                      label="Remember me"
-                      checked={rememberMe}
-                      onChange={setRememberMe}
-                  />
-                </div>
-                
                 <Button
                     type="submit"
                     isLoading={status === 'loading'}
-                    disabled={!login || !password}
+                    disabled={!name || !login || !password}
                 >
-                    Войти
+                    Зарегистрироваться
                 </Button>
             </form>
-            
-            <div className="login-footer">
+
+            <div className="registration-footer">
                 <p className="footer-text">
-                    Ещё нет аккаунта?{' '}
+                    Уже есть аккаунт?{' '}
                     <button 
                         type="button"
-                        className="signup-link"
-                        onClick={onSignUpClick}
+                        className="back-to-login-link"
+                        onClick={onBackToLogin}
                     >
-                        Зарегистрироваться
+                        Войти
                     </button>
                 </p>
             </div>
@@ -94,4 +93,4 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSignUpClick }) => {
     );
 };
 
-export default LoginForm;
+export default RegistrationForm;

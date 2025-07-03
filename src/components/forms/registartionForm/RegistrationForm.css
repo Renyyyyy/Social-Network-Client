@@ -23,16 +23,6 @@
     margin-bottom: 1.5rem;
   }
   
-  .forgot-password {
-    color: #2563eb;
-    font-size: 0.875rem;
-    text-decoration: none;
-  }
-  
-  .forgot-password:hover {
-    text-decoration: underline;
-  }
-  
   .registration-footer {
     margin-top: 1.5rem;
     text-align: center;

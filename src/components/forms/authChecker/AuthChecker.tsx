@@ -1,12 +1,35 @@
 import React, { useEffect, useState } from 'react';
 import './AuthChecker.css';
 import LoginForm from '../loginForm/LoginForm';
-import RegistartionForm from '../registartionForm/RegistartionForm';
 import { pingBackend } from '../../../api/api';
+import { useLocation, useNavigate } from 'react-router-dom';
+import RegistrationForm from '../registartionForm/RegistrationForm';
+import { useAppDispatch } from '../../../store/hooks';
+import { checkAuth } from '../../../store/slices/authSlice';
 
-const AuthChecker: React.FC = () => {
+interface AuthCheckerProps {
+  form?: 'login' | 'registration';
+}
+
+const AuthChecker: React.FC<AuthCheckerProps> = ({ form = 'login' }) => {
   const [status, setStatus] = useState<'checking' | 'online' | 'offline'>('checking');
-  const [activeForm, setActiveForm] = useState<'login' | 'registration'>('login');
+  const [activeForm, setActiveForm] = useState<'login' | 'registration'>(form);
+
+  const navigate = useNavigate();
+  const location = useLocation();
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(checkAuth());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (location.pathname === '/login') {
+      setActiveForm('login');
+    } else if (location.pathname === '/registration') {
+      setActiveForm('registration');
+    }
+  }, [location]);
 
   useEffect(() => {
     const checkBackend = async () => {
@@ -22,8 +45,13 @@ const AuthChecker: React.FC = () => {
     checkBackend();
   }, []);
 
+  const handleFormSwitch = (newForm: 'login' | 'registration') => {
+    setActiveForm(newForm);
+    navigate(newForm === 'login' ? '/login' : '/registration');
+  };
+
   return (
-    <>
+     <div className="auth-checker-container">
       {status === 'checking' && (
         <div className="status-message">
           <div className="loader"></div>
@@ -32,11 +60,11 @@ const AuthChecker: React.FC = () => {
       )}
 
       {status === 'online' && activeForm === 'login' && (
-        <LoginForm onSignUpClick={() => setActiveForm('registration')} />
+        <LoginForm onSignUpClick={() => handleFormSwitch('registration')} />
       )}
       
       {status === 'online' && activeForm === 'registration' && (
-        <RegistartionForm onBackToLogin={() => setActiveForm('login')} />
+        <RegistrationForm onBackToLogin={() => handleFormSwitch('login')} />
       )}
       
       {status === 'offline' && (
@@ -51,7 +79,7 @@ const AuthChecker: React.FC = () => {
           </button>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

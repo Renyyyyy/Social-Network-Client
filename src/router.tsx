@@ -2,10 +2,18 @@ import { createBrowserRouter } from "react-router-dom";
 import UsersComponent from "./components/forms/usersComponent/UsersComponent";
 import AuthChecker from "./components/forms/authChecker/AuthChecker";
 
-
 const BASE_NAME = '';
 
 const router = createBrowserRouter([
+
+    {
+        path: "/login",
+        element: <AuthChecker form="login" />,
+    },
+    {
+        path: "/registration",
+        element: <AuthChecker form="registration" />,
+    },
     {
         path: "/users",
         element: <UsersComponent/>,

@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axios from 'axios';
+import { api } from '../../api/api'; 
 
 export interface User {
   id: number;
@@ -19,11 +19,9 @@ const initialState: UsersState = {
   error: null,
 };
 
-const API_URL = 'http://localhost:7000/api'; 
-
 export const getAll = createAsyncThunk('users/getAll', async () => {
   try {
-    const response = await axios.get(`${API_URL}/users`);
+    const response = await api.get('/users');
     return response.data;
   } catch (error) {
     throw new Error('Failed to fetch users');
@@ -33,9 +31,7 @@ export const getAll = createAsyncThunk('users/getAll', async () => {
 const usersSlice = createSlice({
   name: 'users',
   initialState,
-  reducers: {
-    
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(getAll.pending, (state) => {
