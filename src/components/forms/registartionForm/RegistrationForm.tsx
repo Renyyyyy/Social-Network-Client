@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './RegistrationForm.css';
 import Button from '../../common/button/Button';
 import Card from '../../common/card/Card';
 import InputField from '../../common/inputField/InputField';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
-import { selectAuthStatus, selectAuthError, registerUser } from '../../../store/slices/authSlice';
+import { selectAuthStatus, selectAuthError, registerUser, selectAuthToken } from '../../../store/slices/authSlice';
 
 interface RegistrationFormProps {
   onBackToLogin?: () => void;
@@ -17,20 +17,22 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onBackToLogin }) =>
     const [password, setPassword] = useState('');
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
+
     const status = useAppSelector(selectAuthStatus);
     const error = useAppSelector(selectAuthError);
+    const token = useAppSelector(selectAuthToken);
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        try {
-            const result = await dispatch(registerUser({ name, login, password })).unwrap();
-            localStorage.setItem('accessToken', result.token);
-            
-            navigate('/users');
-        } catch (err) {
-            console.error('Registration error:', err);
-        }
+        dispatch(registerUser({ name, login, password }));
     };
+
+    useEffect(() => {
+        if (status === 'succeeded' && token) {
+            localStorage.setItem('accessToken', token);
+            navigate('/users');
+        }
+    }, [status, token, navigate]);
 
     return (
         <Card className="registration-card">

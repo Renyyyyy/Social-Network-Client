@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './LoginForm.css';
 import Card from '../../common/card/Card';
@@ -6,7 +6,7 @@ import Button from '../../common/button/Button';
 import Checkbox from '../../common/checkbox/Checkbox';
 import InputField from '../../common/inputField/InputField';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
-import { selectAuthStatus, selectAuthError, loginUser } from '../../../store/slices/authSlice';
+import { selectAuthStatus, selectAuthError, loginUser, selectCurrentUser } from '../../../store/slices/authSlice';
 
 interface LoginFormProps {
   onSignUpClick?: () => void;
@@ -18,20 +18,24 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSignUpClick }) => {
     const [rememberMe, setRememberMe] = useState(false);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
+    
+    const user = useAppSelector(selectCurrentUser);
     const status = useAppSelector(selectAuthStatus);
     const error = useAppSelector(selectAuthError);
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        try {
-            const result = await dispatch(loginUser({ login, password })).unwrap();
-            localStorage.setItem('accessToken', result.token);
-            
-            navigate('/users');
-        } catch (err) {
-            console.error('Login error:', err);
-        }
+        dispatch(loginUser({ login, password }));
     };
+
+    useEffect(() => {
+        if (status === 'succeeded' && user) {
+            if (rememberMe) {
+                localStorage.setItem('rememberedLogin', login);
+            }
+            navigate(`/profile/${user.id}`);
+        }
+    }, [status, user, rememberMe, login, navigate]);
 
     return (
         <Card className="login-card">

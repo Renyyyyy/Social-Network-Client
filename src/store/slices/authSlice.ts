@@ -5,6 +5,7 @@ import { api } from '../../api/api';
 interface AuthState {
   user: User | null;
   token: string | null;
+  isAuthenticated: boolean;
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
 }
@@ -29,13 +30,13 @@ interface RegistrationData {
 const initialState: AuthState = {
   user: null,
   token: null,
+  isAuthenticated: false,
   status: 'idle',
   error: null,
 };
 
 const API_URL = 'http://localhost:7000/api';
 
-// Асинхронные thunk-функции
 export const loginUser = createAsyncThunk(
   'auth/login',
   async ({ login, password }: LoginData, { rejectWithValue }) => {
@@ -75,6 +76,11 @@ export const checkAuth = createAsyncThunk(
       if (!token) throw new Error('No token');
       
       const response = await api.get('/auth/me');
+
+      if (!response.data?.user) {
+        throw new Error('User data not found');
+      }
+      
       return {
         user: response.data.user,
         token: token
@@ -108,6 +114,7 @@ const authSlice = createSlice({
         state.status = 'succeeded';
         state.user = action.payload.user;
         state.token = action.payload.token;
+        state.isAuthenticated = true;
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.status = 'failed';
@@ -123,6 +130,7 @@ const authSlice = createSlice({
         state.status = 'succeeded';
         state.user = action.payload.user;
         state.token = action.payload.token;
+        state.isAuthenticated = true;
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.status = 'failed';
@@ -134,9 +142,14 @@ const authSlice = createSlice({
       state.status = 'loading';
       })
       .addCase(checkAuth.fulfilled, (state, action) => {
-      state.status = 'succeeded';
-      state.user = action.payload.user;
-      state.token = action.payload.token;
+      if (action.payload.token && action.payload.user) {
+        state.status = 'succeeded';
+        state.user = action.payload.user;
+        state.token = action.payload.token;
+        state.isAuthenticated = true;
+      } else {
+        state.isAuthenticated = false;
+      }
       })
       .addCase(checkAuth.rejected, (state, action) => {
       state.status = 'failed';

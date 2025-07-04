@@ -68,3 +68,38 @@
   .signup-link:hover {
       text-decoration: underline;
   }
+
+  .input-field {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.input-field[type="textarea"],
+.input-field.textarea { 
+    min-height: 100px;
+    resize: vertical; 
+}
+
+.error {
+    border-color: red;
+}
+
+.error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 4px;
+}
+
+.input-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.required {
+    color: red;
+    margin-left: 4px;
+}
