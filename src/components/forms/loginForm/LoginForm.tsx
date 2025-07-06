@@ -6,7 +6,8 @@ import Button from '../../common/button/Button';
 import Checkbox from '../../common/checkbox/Checkbox';
 import InputField from '../../common/inputField/InputField';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
-import { selectAuthStatus, selectAuthError, loginUser, selectCurrentUser } from '../../../store/slices/authSlice';
+import { selectAuthStatus, selectAuthError, selectCurrentUser } from '../../../store/slices/authSlice';
+import { loginUser } from '../../../store/thunks/thunksAuth';
 
 interface LoginFormProps {
   onSignUpClick?: () => void;
@@ -40,7 +41,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSignUpClick }) => {
     return (
         <Card className="login-card">
             <h2 className="login-title">Авторизация</h2>
-            
+      
             {status === 'failed' && error && (
                 <div className="error-message">{error}</div>
             )}

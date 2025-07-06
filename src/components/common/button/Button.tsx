@@ -4,7 +4,7 @@ import './Button.css';
 interface ButtonProps {
     children: React.ReactNode;
     variant?: 'primary' | 'secondary';
-    isLoading?: boolean | string;
+    isLoading?: boolean;
     onClick?: () => void;
     type?: 'button' | 'submit' | 'reset';
     disabled?: boolean;
@@ -20,16 +20,15 @@ const Button: React.FC<ButtonProps> = ({
     disabled = false,
     className = ''
 }) => {
-    const isActuallyLoading = Boolean(isLoading); 
     
     return (
         <button
             type={type}
-            className={`button ${variant} ${isActuallyLoading ? 'loading' : ''} ${className}`}
+            className={`button ${variant} ${isLoading ? 'loading' : ''} ${className}`}
             onClick={onClick}
-            disabled={disabled || isActuallyLoading}
+            disabled={disabled || isLoading}
         >
-            {isActuallyLoading ? 'Загрузка...' : children}
+            {isLoading ? 'Загрузка...' : children}
         </button>
     );
 };

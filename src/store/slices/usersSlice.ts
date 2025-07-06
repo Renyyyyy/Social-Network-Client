@@ -1,5 +1,6 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { api } from '../../api/api'; 
+import { createSlice } from '@reduxjs/toolkit';
+
+export type UsersStatus = 'idle' | 'loading' | 'succeeded' | 'failed';
 
 export interface User {
   id: number;
@@ -7,46 +8,34 @@ export interface User {
   login: string;
 }
 
-interface UsersState {
+export interface UsersState {
   users: User[];
-  status: 'idle' | 'loading' | 'succeeded' | 'failed';
+  status: UsersStatus;
   error: string | null;
 }
 
-const initialState: UsersState = {
+export const initialState: UsersState = {
   users: [],
   status: 'idle',
   error: null,
 };
 
-export const getAll = createAsyncThunk('users/getAll', async () => {
-  try {
-    const response = await api.get('/users');
-    return response.data;
-  } catch (error) {
-    throw new Error('Failed to fetch users');
-  }
-});
-
 const usersSlice = createSlice({
   name: 'users',
   initialState,
-  reducers: {},
-  extraReducers: (builder) => {
-    builder
-      .addCase(getAll.pending, (state) => {
-        state.status = 'loading';
-        state.error = null;
-      })
-      .addCase(getAll.fulfilled, (state, action) => {
-        state.status = 'succeeded';
-        state.users = action.payload;
-      })
-      .addCase(getAll.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.error.message || 'Failed to fetch users';
-      });
+  reducers: {
+    setUsers: (state, action: {payload: User[]}) => {
+      state.users = action.payload;
+    },
+    setStatus: (state, action: {payload: UsersStatus}) => {
+      state.status = action.payload;
+    },
+    setError: (state, action: {payload: string}) => {
+      state.error = action.payload;
+    },
   },
 });
+
+export const { setStatus, setError, setUsers } = usersSlice.actions;
 
 export default usersSlice.reducer;

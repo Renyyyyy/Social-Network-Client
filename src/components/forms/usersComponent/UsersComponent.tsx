@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
-import { getAll, User } from '../../../store/slices/usersSlice';
+import { User } from '../../../store/slices/usersSlice';
+import { getAll } from '../../../store/thunks/thunksUser';
 
 
 const UsersComponent = () => {

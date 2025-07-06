@@ -4,8 +4,8 @@ import LoginForm from '../loginForm/LoginForm';
 import { pingBackend } from '../../../api/api';
 import { useLocation, useNavigate, Outlet } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
-import { checkAuth } from '../../../store/slices/authSlice';
 import RegistrationForm from '../registartionForm/RegistrationForm';
+import { checkAuth } from '../../../store/thunks/thunksAuth';
 
 interface AuthCheckerProps {
   form?: 'login' | 'registration';
@@ -85,10 +85,10 @@ const AuthChecker: React.FC<AuthCheckerProps> = ({ form = 'login' }) => {
     );
   }
 
-  if (isAuthenticated) {
-    console.log(`AuthChecker: User authenticated, rendering Outlet for ${location.pathname}`);
-    return <Outlet />;
-  }
+  // if (isAuthenticated) {
+  //   console.log(`AuthChecker: User authenticated, rendering Outlet for ${location.pathname}`);
+  //   return <Outlet />;
+  // }
 
   console.log(`AuthChecker: Rendering ${activeForm} form for ${location.pathname}`);
   return (

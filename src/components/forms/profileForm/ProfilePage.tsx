@@ -5,7 +5,7 @@ import Button from '../../common/button/Button';
 import InputField from '../../common/inputField/InputField';
 import './ProfilePage.css';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
-import { fetchProfile, updateProfile } from '../../../store/slices/profileSlice';
+import { fetchProfile, updateProfile } from '../../../store/thunks/thunksProfile';
 
 const ProfilePage = () => {
   const dispatch = useAppDispatch();

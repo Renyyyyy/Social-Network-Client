@@ -5,7 +5,8 @@ import Button from '../../common/button/Button';
 import Card from '../../common/card/Card';
 import InputField from '../../common/inputField/InputField';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
-import { selectAuthStatus, selectAuthError, registerUser, selectAuthToken } from '../../../store/slices/authSlice';
+import { selectAuthStatus, selectAuthError, selectAuthToken } from '../../../store/slices/authSlice';
+import { registerUser } from '../../../store/thunks/thunksAuth';
 
 interface RegistrationFormProps {
   onBackToLogin?: () => void;

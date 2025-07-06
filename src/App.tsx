@@ -5,7 +5,7 @@ import AuthChecker from './components/forms/authChecker/AuthChecker';
 const App = () => {
     return (
         <div className="app-container">
-            <Outlet />
+            <Outlet/>
         </div>
     );
 };
