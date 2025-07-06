@@ -2,8 +2,6 @@ import { createBrowserRouter } from "react-router-dom";
 import UsersComponent from "./components/forms/usersComponent/UsersComponent";
 import AuthChecker from "./components/forms/authChecker/AuthChecker";
 import ProfilePage from "./components/forms/profileForm/ProfilePage";
-import LoginForm from './components/forms/loginForm/LoginForm';
-import RegistrationForm from './components/forms/registartionForm/RegistrationForm';
 
 const BASE_NAME = '';
 
@@ -13,11 +11,11 @@ const router = createBrowserRouter([
     element: <AuthChecker />,
     children: [
       {
-        path: "profile/:id",
+        path: "/profile/:id",
         element: <ProfilePage />
       },
       {
-        path: "users",
+        path: "/users",
         element: <UsersComponent />
       },
       {

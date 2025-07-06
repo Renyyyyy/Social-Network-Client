@@ -29,6 +29,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSignUpClick }) => {
         dispatch(loginUser({ login, password }));
     };
 
+
     useEffect(() => {
         if (status === 'succeeded' && user) {
             if (rememberMe) {

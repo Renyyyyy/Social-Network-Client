@@ -60,7 +60,6 @@ export const loginUser = createAppAsyncThunk(
       dispatch(setStatus('loading'));
       try {
         const token = localStorage.getItem('accessToken');
-        if (!token) throw new Error('No token');
         
         const response = await api.get<{user: User}>('/auth/me');
         
@@ -71,6 +70,9 @@ export const loginUser = createAppAsyncThunk(
         } else {
           dispatch(setIsAuth(false));
         }
+        
+        if (!token) throw new Error('No token');
+
         if (!response.data?.user) {
           throw new Error('User data not found');
         }

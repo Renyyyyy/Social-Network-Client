@@ -21,6 +21,12 @@ const AuthChecker: React.FC<AuthCheckerProps> = ({ form = 'login' }) => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
+    if (activeForm === 'login') {
+      navigate('/login');
+    }
+  }, [activeForm, navigate]);
+
+  useEffect(() => {
     console.log("AuthChecker: Dispatching checkAuth");
     dispatch(checkAuth());
   }, [dispatch]);
@@ -61,6 +67,7 @@ const AuthChecker: React.FC<AuthCheckerProps> = ({ form = 'login' }) => {
     navigate(newForm === 'login' ? '/login' : '/registration');
   };
 
+  debugger
   if (status === 'offline') {
     return (
       <div className="status-message error">
@@ -85,12 +92,8 @@ const AuthChecker: React.FC<AuthCheckerProps> = ({ form = 'login' }) => {
     );
   }
 
-  // if (isAuthenticated) {
-  //   console.log(`AuthChecker: User authenticated, rendering Outlet for ${location.pathname}`);
-  //   return <Outlet />;
-  // }
-
   console.log(`AuthChecker: Rendering ${activeForm} form for ${location.pathname}`);
+  debugger
   return (
     <div className="auth-checker-container">
       {activeForm === 'login' ? (
