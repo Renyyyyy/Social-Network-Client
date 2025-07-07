@@ -18,7 +18,6 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSignUpClick }) => {
     const [password, setPassword] = useState('');
     const [rememberMe, setRememberMe] = useState(false);
     const dispatch = useAppDispatch();
-    const navigate = useNavigate();
     
     const user = useAppSelector(selectCurrentUser);
     const status = useAppSelector(selectAuthStatus);
@@ -28,16 +27,6 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSignUpClick }) => {
         e.preventDefault();
         dispatch(loginUser({ login, password }));
     };
-
-
-    useEffect(() => {
-        if (status === 'succeeded' && user) {
-            if (rememberMe) {
-                localStorage.setItem('rememberedLogin', login);
-            }
-            navigate(`/profile/${user.id}`);
-        }
-    }, [status, user, rememberMe, login, navigate]);
 
     return (
         <Card className="login-card">

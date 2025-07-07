@@ -4,7 +4,7 @@ export type UsersStatus = 'idle' | 'loading' | 'succeeded' | 'failed';
 
 export interface User {
   id: number;
-  name: string;
+  nickname: string;
   login: string;
 }
 

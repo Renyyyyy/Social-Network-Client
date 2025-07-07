@@ -13,7 +13,7 @@ interface RegistrationFormProps {
 }
 
 const RegistrationForm: React.FC<RegistrationFormProps> = ({ onBackToLogin }) => {
-    const [name, setName] = useState('');
+    const [nickname, setName] = useState('');
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
     const dispatch = useAppDispatch();
@@ -21,19 +21,11 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onBackToLogin }) =>
 
     const status = useAppSelector(selectAuthStatus);
     const error = useAppSelector(selectAuthError);
-    const token = useAppSelector(selectAuthToken);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        dispatch(registerUser({ name, login, password }));
+        dispatch(registerUser({ nickname, login, password }));
     };
-
-    useEffect(() => {
-        if (status === 'succeeded' && token) {
-            localStorage.setItem('accessToken', token);
-            navigate('/users');
-        }
-    }, [status, token, navigate]);
 
     return (
         <Card className="registration-card">
@@ -48,7 +40,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onBackToLogin }) =>
                     type="text"
                     label="Name"
                     placeholder="Your name"
-                    value={name}
+                    value={nickname}
                     onChange={setName}
                     required
                 />
@@ -74,7 +66,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onBackToLogin }) =>
                 <Button
                     type="submit"
                     isLoading={status === 'loading'}
-                    disabled={!name || !login || !password}
+                    disabled={!nickname || !login || !password}
                 >
                     Зарегистрироваться
                 </Button>

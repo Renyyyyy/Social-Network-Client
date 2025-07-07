@@ -12,7 +12,7 @@ export interface AuthState {
 
 export interface User {
   id: number;
-  name: string;
+  nickname: string;
   login: string;
 }
 
@@ -22,7 +22,7 @@ export interface LoginData {
 }
 
 export interface RegistrationData {
-  name: string;
+  nickname: string;
   login: string;
   password: string;
 }

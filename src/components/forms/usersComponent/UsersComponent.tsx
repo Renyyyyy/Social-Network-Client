@@ -37,7 +37,7 @@ const UsersComponent = () => {
           {users.map((user) => (
             <li key={user.id} className="user-item" onClick={() => handleUserClick(user)} style={{ cursor: 'pointer' }}>
               <div className="user-info">
-                <strong>{user.name}</strong>
+                <strong>{user.nickname}</strong>
                 <span>@{user.login}</span>
               </div>
             </li>

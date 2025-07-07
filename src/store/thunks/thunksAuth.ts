@@ -29,14 +29,14 @@ export const loginUser = createAppAsyncThunk(
   );
   
   export const registerUser = createAppAsyncThunk(
-    'auth/register',
-    async ({ name, login, password }: RegistrationData, { dispatch }) => {
+    'auth/registration',
+    async ({ nickname, login, password }: RegistrationData, { dispatch }) => {
       debugger
       dispatch(setStatus('loading'));
       dispatch(setError(''));
       try {
-        const response = await api.post<{token: string, user: User}>(`${API_URL}/auth/register`, {
-          name,
+        const response = await api.post<{token: string}>(`${API_URL}/auth/registration`, {
+          nickname,
           login,
           password,
         });
@@ -44,7 +44,6 @@ export const loginUser = createAppAsyncThunk(
         const token = response.data.token;
         dispatch(setToken(token));
         localStorage.setItem('accessToken', token);
-        dispatch(setUser(response.data.user));
         dispatch(setIsAuth(true));
       } catch (error: any) {
         dispatch(setStatus('failed'));
@@ -56,26 +55,25 @@ export const loginUser = createAppAsyncThunk(
   export const checkAuth = createAppAsyncThunk(
     'auth/check',
     async (_, { dispatch  }) => {
-      debugger
+      
       dispatch(setStatus('loading'));
       try {
-        const token = localStorage.getItem('accessToken');
-        
-        const response = await api.get<{user: User}>('/auth/me');
-        
-        if (response.data.user) {
+        const token = localStorage.getItem('accessToken')
+        if (token) {
           dispatch(setStatus('succeeded'));
-          dispatch(setUser(response.data.user));
           dispatch(setIsAuth(true));
+          debugger
+          const response = await api.get<{user: User}>('/auth/me');
+          dispatch(setUser(response.data.user));
+          if (!response.data?.user) {
+            throw new Error('User data not found');
+          }
         } else {
           dispatch(setIsAuth(false));
+          throw new Error('Token not found');
         }
         
-        if (!token) throw new Error('No token');
-
-        if (!response.data?.user) {
-          throw new Error('User data not found');
-        }
+        
         
       } catch (error: any) {
         localStorage.removeItem('accessToken');

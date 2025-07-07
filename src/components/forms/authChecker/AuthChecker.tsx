@@ -26,13 +26,12 @@ const AuthChecker: React.FC<AuthCheckerProps> = ({ form = 'login' }) => {
     }
   }, [activeForm, navigate]);
 
+  debugger
   useEffect(() => {
-    console.log("AuthChecker: Dispatching checkAuth");
     dispatch(checkAuth());
   }, [dispatch]);
 
   useEffect(() => {
-    console.log(`AuthChecker: Location changed to ${location.pathname}`);
     if (location.pathname === '/login') {
       setActiveForm('login');
     } else if (location.pathname === '/registration') {
@@ -43,24 +42,15 @@ const AuthChecker: React.FC<AuthCheckerProps> = ({ form = 'login' }) => {
   useEffect(() => {
     const checkBackend = async () => {
         try {
-            console.log("AuthChecker: Checking backend connection");
             await pingBackend();
             setStatus('online');
         } catch (error) {
-            console.error('Бэкенд недоступен', error);
             setStatus('offline');
         }
     };
 
     checkBackend();
   }, []);
-
-  useEffect(() => {
-    console.log(`AuthChecker: Authentication status - 
-      isAuthenticated: ${isAuthenticated}, 
-      authStatus: ${authStatus}, 
-      user: ${user ? user.id : 'null'}`);
-  }, [isAuthenticated, authStatus, user]);
 
   const handleFormSwitch = (newForm: 'login' | 'registration') => {
     setActiveForm(newForm);
@@ -92,8 +82,6 @@ const AuthChecker: React.FC<AuthCheckerProps> = ({ form = 'login' }) => {
     );
   }
 
-  console.log(`AuthChecker: Rendering ${activeForm} form for ${location.pathname}`);
-  debugger
   return (
     <div className="auth-checker-container">
       {activeForm === 'login' ? (

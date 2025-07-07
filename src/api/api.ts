@@ -12,13 +12,13 @@ export const pingBackend = async () => {
   }
 };
 
-
 export const api = axios.create({
   baseURL: API_URL,
 });
 
 api.interceptors.request.use(config => {
   const token = localStorage.getItem('accessToken');
+  debugger
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -27,9 +27,25 @@ api.interceptors.request.use(config => {
 
 api.interceptors.response.use(
   response => response,
-  error => {
-    if (error.response?.status === 401) {
-      console.error('Unauthorized access');
+  async (error) => {
+    const originalRequest = error.config;
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true; // Помечаем запрос как повторный
+      
+      try {
+        const refreshResponse = await axios.get(`${API_URL}/auth/refresh`);
+        
+        const newToken = refreshResponse.data.accessToken;
+        localStorage.setItem('accessToken', newToken);
+        
+        originalRequest.headers.Authorization = `Bearer ${newToken}`;
+        
+        return api(originalRequest);
+      } catch (refreshError) {
+        localStorage.removeItem('accessToken');
+        window.location.href = '/login';
+        return Promise.reject(refreshError);
+      }
     }
     return Promise.reject(error);
   }
