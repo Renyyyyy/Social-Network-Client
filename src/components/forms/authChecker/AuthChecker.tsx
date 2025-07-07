@@ -6,6 +6,7 @@ import { useLocation, useNavigate, Outlet } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import RegistrationForm from '../registartionForm/RegistrationForm';
 import { checkAuth } from '../../../store/thunks/thunksAuth';
+import { User } from '../../../store/slices/usersSlice';
 
 interface AuthCheckerProps {
   form?: 'login' | 'registration';
@@ -14,22 +15,35 @@ interface AuthCheckerProps {
 const AuthChecker: React.FC<AuthCheckerProps> = ({ form = 'login' }) => {
   const [status, setStatus] = useState<'checking' | 'online' | 'offline'>('checking');
   const [activeForm, setActiveForm] = useState<'login' | 'registration'>(form);
-  const { isAuthenticated, status: authStatus, user } = useAppSelector(state => state.auth);
+  const { isAuthenticated, status: authStatus} = useAppSelector(state => state.auth);
+  const { user } = useAppSelector(state => state.users);
 
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (activeForm === 'login') {
-      navigate('/login');
-    }
-  }, [activeForm, navigate]);
-
-  debugger
-  useEffect(() => {
     dispatch(checkAuth());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      const isProfilePage = location.pathname.startsWith('/profile/');
+      
+      if (!isProfilePage) {
+        const userId = user?.id || localStorage.getItem('currUserId');
+        if (userId) {
+          navigate(`/profile/${userId}`);
+        }
+      }
+    }
+  }, [isAuthenticated, navigate, user, location.pathname]);
+
+  useEffect(() => {
+    if (!isAuthenticated && activeForm === 'login') {
+      navigate('/login');
+    }
+  }, [activeForm, navigate, isAuthenticated]);
 
   useEffect(() => {
     if (location.pathname === '/login') {
@@ -53,11 +67,9 @@ const AuthChecker: React.FC<AuthCheckerProps> = ({ form = 'login' }) => {
   }, []);
 
   const handleFormSwitch = (newForm: 'login' | 'registration') => {
-    setActiveForm(newForm);
     navigate(newForm === 'login' ? '/login' : '/registration');
   };
 
-  debugger
   if (status === 'offline') {
     return (
       <div className="status-message error">

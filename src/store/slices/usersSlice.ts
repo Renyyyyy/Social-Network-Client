@@ -9,13 +9,13 @@ export interface User {
 }
 
 export interface UsersState {
-  users: User[];
+  user: User | null;
   status: UsersStatus;
   error: string | null;
 }
 
 export const initialState: UsersState = {
-  users: [],
+  user: null,
   status: 'idle',
   error: null,
 };
@@ -24,8 +24,8 @@ const usersSlice = createSlice({
   name: 'users',
   initialState,
   reducers: {
-    setUsers: (state, action: {payload: User[]}) => {
-      state.users = action.payload;
+    setUsers: (state, action: {payload: User}) => {
+      state.user = action.payload;
     },
     setStatus: (state, action: {payload: UsersStatus}) => {
       state.status = action.payload;

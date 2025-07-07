@@ -1,6 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { api } from '../../api/api';
-import { createAppAsyncThunk } from '../store';
+import { createSlice } from '@reduxjs/toolkit';
 
 export type ProfileStatus = 'idle' | 'loading' | 'succeeded' | 'failed';
 

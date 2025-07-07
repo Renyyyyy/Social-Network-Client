@@ -6,12 +6,13 @@ import InputField from '../../common/inputField/InputField';
 import './ProfilePage.css';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { fetchProfile, updateProfile } from '../../../store/thunks/thunksProfile';
+import { getUserById } from '../../../store/thunks/thunksUser';
 
 const ProfilePage = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-  
+
   const profile = useAppSelector(state => state.profile.profile);
   const profileError = useAppSelector(state => state.profile.error);
   const profileStatus = useAppSelector(state => state.profile.status);
@@ -22,12 +23,14 @@ const ProfilePage = () => {
 
   useEffect(() => {
     if (id) {
-      const userId = parseInt(id);
+      const userId = parseInt(id, 10);
       if (!isNaN(userId)) {
+        dispatch(getUserById(userId)); 
         dispatch(fetchProfile(userId));
       }
     }
   }, [dispatch, id]);
+
 
   useEffect(() => {
     if (profile) {

@@ -2,18 +2,22 @@ import { api } from "../../api/api";
 import { ProfileData, ProfileState, setError, setProfile, setStatus } from "../slices/profileSlice";
 import { createAppAsyncThunk } from "../store";
 
+const API_URL = 'http://localhost:7000/api';
+
 export const fetchProfile = createAppAsyncThunk(
     'profile/fetchProfile',
     async (userId: number, { dispatch}) => {
         dispatch(setStatus('loading'))
         try {
-            const response = await api.get<ProfileState>(`/profile/${userId}`);
-            if (response.data.profile) {
-                dispatch(setProfile(response.data.profile)); // Теперь точно не null
-                dispatch(setStatus('succeeded'));
+            const response = await api.get<ProfileData>(`${API_URL}/profile/${userId}`);
+            console.log(response.data)
+            debugger
+            if (response.data) {
+              dispatch(setProfile(response.data));
+              dispatch(setStatus('succeeded'));
             } else {
-            dispatch(setError('Profile not found'));
-            dispatch(setStatus('failed'));
+              dispatch(setError('Profile not found'));
+              dispatch(setStatus('failed'));
            }
         } catch (error: any) {
             dispatch(setError('Profile get error'));

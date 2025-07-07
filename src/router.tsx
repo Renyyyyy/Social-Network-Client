@@ -9,8 +9,8 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <AuthChecker />,
-    children: [
-      {
+  },
+  {
         path: "/profile/:id",
         element: <ProfilePage />
       },
@@ -18,12 +18,6 @@ const router = createBrowserRouter([
         path: "/users",
         element: <UsersComponent />
       },
-      {
-        path: "",
-        element: <div>Home Page</div>
-      }
-    ]
-  },
   {
     path: "/login",
     element: <AuthChecker form="login" />,

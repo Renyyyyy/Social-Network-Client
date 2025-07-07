@@ -18,8 +18,8 @@ export const loginUser = createAppAsyncThunk(
         });
         dispatch(setStatus('succeeded'));
         const token = response.data.token;
-        dispatch(setToken(token));
         localStorage.setItem('accessToken', token);
+        dispatch(setToken(token));
         dispatch(setIsAuth(true));
       } catch (error: unknown) {
         dispatch(setStatus('failed'));
@@ -42,8 +42,8 @@ export const loginUser = createAppAsyncThunk(
         });
         dispatch(setStatus('succeeded'));
         const token = response.data.token;
-        dispatch(setToken(token));
         localStorage.setItem('accessToken', token);
+        dispatch(setToken(token));
         dispatch(setIsAuth(true));
       } catch (error: any) {
         dispatch(setStatus('failed'));
@@ -60,20 +60,21 @@ export const loginUser = createAppAsyncThunk(
       try {
         const token = localStorage.getItem('accessToken')
         if (token) {
+          debugger
+          const response = await api.get<User>(`${API_URL}/auth/me`);
+          dispatch(setUser(response.data));
+          const user = response.data;
+          console.log(user)
+          localStorage.setItem('currUserId', user.id.toString());
           dispatch(setStatus('succeeded'));
           dispatch(setIsAuth(true));
-          debugger
-          const response = await api.get<{user: User}>('/auth/me');
-          dispatch(setUser(response.data.user));
-          if (!response.data?.user) {
+          if (!response.data) {
             throw new Error('User data not found');
           }
         } else {
           dispatch(setIsAuth(false));
           throw new Error('Token not found');
         }
-        
-        
         
       } catch (error: any) {
         localStorage.removeItem('accessToken');

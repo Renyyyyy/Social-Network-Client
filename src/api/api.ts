@@ -30,19 +30,18 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
     if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true; // Помечаем запрос как повторный
+      originalRequest._retry = true;
       
       try {
-        const refreshResponse = await axios.get(`${API_URL}/auth/refresh`);
-        
-        const newToken = refreshResponse.data.accessToken;
+        const refreshResponse = await axios.get<{token: string}>(`${API_URL}/auth/refresh`);
+        debugger
+        const newToken = refreshResponse.data.token;
         localStorage.setItem('accessToken', newToken);
         
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
         
         return api(originalRequest);
       } catch (refreshError) {
-        localStorage.removeItem('accessToken');
         window.location.href = '/login';
         return Promise.reject(refreshError);
       }

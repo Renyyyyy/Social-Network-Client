@@ -7,7 +7,7 @@ import { getAll } from '../../../store/thunks/thunksUser';
 const UsersComponent = () => {
     const dispatch = useAppDispatch();
 
-    const { users, status, error } = useAppSelector((state) => state.users);
+    const { user, status, error } = useAppSelector((state) => state.users);
 
     useEffect(() => {
         if (status === 'idle') {
@@ -32,7 +32,7 @@ const UsersComponent = () => {
         </div>
       )}
       
-      {status === 'succeeded' && (
+      {/* {status === 'succeeded' && (
         <ul className="users-list">
           {users.map((user) => (
             <li key={user.id} className="user-item" onClick={() => handleUserClick(user)} style={{ cursor: 'pointer' }}>
@@ -43,7 +43,7 @@ const UsersComponent = () => {
             </li>
           ))}
         </ul>
-      )}
+      )} */}
     </div>
   );
 };
