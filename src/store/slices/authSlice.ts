@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { LocalStorageKey } from '../../types';
 
 export type AuthStatus = 'idle' | 'loading' | 'succeeded' | 'failed';
 
@@ -35,8 +36,6 @@ export const initialState: AuthState = {
   error: null,
 };
 
-
-
 const authSlice = createSlice({
   name: 'auth',
   initialState,
@@ -61,7 +60,7 @@ const authSlice = createSlice({
       state.token = null;
       state.status = 'idle';
       state.error = null;
-      localStorage.removeItem('accessToken');
+      localStorage.removeItem(LocalStorageKey.ACCESS_TOKEN);
     },
   },
 });
@@ -69,7 +68,8 @@ const authSlice = createSlice({
 export const { logout, setStatus, setUser, setIsAuth, setError, setToken} = authSlice.actions;
 export default authSlice.reducer;
 
-export const selectCurrentUser = (state: { auth: AuthState }) => state.auth.user;
+export const selectIsAuthenticated = (state: { auth: AuthState }) => state.auth.isAuthenticated;
+export const selectAuthUser = (state: { auth: AuthState }) => state.auth.user;
 export const selectAuthToken = (state: { auth: AuthState }) => state.auth.token;
 export const selectAuthStatus = (state: { auth: AuthState }) => state.auth.status;
 export const selectAuthError = (state: { auth: AuthState }) => state.auth.error;

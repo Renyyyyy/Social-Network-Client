@@ -1,22 +1,30 @@
-import React, { useEffect, useState } from 'react';
-import './AuthChecker.css';
-import LoginForm from '../loginForm/LoginForm';
-import { pingBackend } from '../../../api/api';
-import { useLocation, useNavigate, Outlet } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../../../store/hooks';
-import RegistrationForm from '../registartionForm/RegistrationForm';
-import { checkAuth } from '../../../store/thunks/thunksAuth';
-import { User } from '../../../store/slices/usersSlice';
+// AuthChecker.tsx
+import React, { useEffect, useState } from "react";
+import "./AuthChecker.css";
+import LoginForm from "../loginForm/LoginForm";
+import { pingBackend } from "../../../api/api";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
+import RegistrationForm from "../registartionForm/RegistrationForm";
+import { checkAuth } from "../../../store/thunks/thunksAuth";
+
+import {
+  selectIsAuthenticated,
+  selectAuthStatus,
+  selectAuthUser,
+} from "../../../store/slices/authSlice";
+import usePingBackend from "./usePingBackend";
 
 interface AuthCheckerProps {
-  form?: 'login' | 'registration';
+  form?: "login" | "registration";
 }
 
-const AuthChecker: React.FC<AuthCheckerProps> = ({ form = 'login' }) => {
-  const [status, setStatus] = useState<'checking' | 'online' | 'offline'>('checking');
-  const [activeForm, setActiveForm] = useState<'login' | 'registration'>(form);
-  const { isAuthenticated, status: authStatus} = useAppSelector(state => state.auth);
-  const { user } = useAppSelector(state => state.users);
+const AuthChecker: React.FC<AuthCheckerProps> = ({ form = "login" }) => {
+  const [activeForm, setActiveForm] = useState<"login" | "registration">(form);
+
+  const isAuthenticated = useAppSelector(selectIsAuthenticated);
+  const authStatus = useAppSelector(selectAuthStatus);
+  const authUser = useAppSelector(selectAuthUser);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -28,55 +36,39 @@ const AuthChecker: React.FC<AuthCheckerProps> = ({ form = 'login' }) => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      const isProfilePage = location.pathname.startsWith('/profile/');
-      
-      if (!isProfilePage) {
-        const userId = user?.id || localStorage.getItem('currUserId');
-        if (userId) {
-          navigate(`/profile/${userId}`);
-        }
+      const allowedRoutes = ["/login", "/registration", "/"];
+      if (allowedRoutes.includes(location.pathname)) {
+        const userId = authUser?.id || localStorage.getItem("currUserId");
+        navigate(`/profile/${userId}`);
+      }
+    } else {
+      if (location.pathname.startsWith("/profile/")) {
+        navigate("/login");
       }
     }
-  }, [isAuthenticated, navigate, user, location.pathname]);
+  }, [isAuthenticated, navigate, authUser, location.pathname]);
 
   useEffect(() => {
-    if (!isAuthenticated && activeForm === 'login') {
-      navigate('/login');
-    }
-  }, [activeForm, navigate, isAuthenticated]);
-
-  useEffect(() => {
-    if (location.pathname === '/login') {
-      setActiveForm('login');
-    } else if (location.pathname === '/registration') {
-      setActiveForm('registration');
+    if (location.pathname === "/login") {
+      setActiveForm("login");
+    } else if (location.pathname === "/registration") {
+      setActiveForm("registration");
     }
   }, [location]);
 
-  useEffect(() => {
-    const checkBackend = async () => {
-        try {
-            await pingBackend();
-            setStatus('online');
-        } catch (error) {
-            setStatus('offline');
-        }
-    };
+  const status = usePingBackend();
 
-    checkBackend();
-  }, []);
-
-  const handleFormSwitch = (newForm: 'login' | 'registration') => {
-    navigate(newForm === 'login' ? '/login' : '/registration');
+  const handleFormSwitch = (newForm: "login" | "registration") => {
+    navigate(newForm === "login" ? "/login" : "/registration");
   };
 
-  if (status === 'offline') {
+  if (status === "offline") {
     return (
       <div className="status-message error">
         <h3>Ошибка соединения</h3>
         <p>Сервер недоступен. Пожалуйста, попробуйте позже.</p>
-        <button 
-          className="retry-button" 
+        <button
+          className="retry-button"
           onClick={() => window.location.reload()}
         >
           Попробовать снова
@@ -85,7 +77,7 @@ const AuthChecker: React.FC<AuthCheckerProps> = ({ form = 'login' }) => {
     );
   }
 
-  if (status === 'checking' || authStatus === 'loading') {
+  if (status === "checking" || authStatus === "loading") {
     return (
       <div className="status-message">
         <div className="loader"></div>
@@ -96,10 +88,10 @@ const AuthChecker: React.FC<AuthCheckerProps> = ({ form = 'login' }) => {
 
   return (
     <div className="auth-checker-container">
-      {activeForm === 'login' ? (
-        <LoginForm onSignUpClick={() => handleFormSwitch('registration')} />
+      {activeForm === "login" ? (
+        <LoginForm onSignUpClick={() => handleFormSwitch("registration")} />
       ) : (
-        <RegistrationForm onBackToLogin={() => handleFormSwitch('login')} />
+        <RegistrationForm onBackToLogin={() => handleFormSwitch("login")} />
       )}
     </div>
   );

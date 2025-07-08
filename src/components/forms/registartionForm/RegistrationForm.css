@@ -1,79 +1,79 @@
-  .registration-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .registration-title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #1e293b;
-    margin-bottom: 1.5rem;
-    text-align: center;
-  }
-  
-  .registration-form {
-    width: 90%;
-  }
-  
-  .registration-options {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-  }
-  
-  .registration-footer {
-    margin-top: 1.5rem;
-    text-align: center;
-  }
-  
-  .footer-text {
-    color: #64748b;
-    font-size: 0.875rem;
-  }
-  
-  .signup-link {
-    color: #2563eb;
-    text-decoration: none;
-    font-weight: 500;
-  }
-  
-  .signup-link:hover {
-    text-decoration: underline;
-  }
+.registration-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
-  .forgot-password,
-  .signup-link {
-      background: none;
-      border: none;
-      color: #2563eb;
-      cursor: pointer;
-      font-size: 0.875rem;
-      padding: 0;
-      text-decoration: none;
-  }
+.registration-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
 
-  .forgot-password:hover,
-  .signup-link:hover {
-      text-decoration: underline;
-  }
-  .registartion-footer {
-    margin-top: 15px;
-    text-align: center;
+.registration-form {
+  width: 90%;
+}
+
+.registration-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.registration-footer {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+.footer-text {
+  color: #64748b;
+  font-size: 0.875rem;
+}
+
+.signup-link {
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.signup-link:hover {
+  text-decoration: underline;
+}
+
+.forgot-password,
+.signup-link {
+  background: none;
+  border: none;
+  color: #2563eb;
+  cursor: pointer;
+  font-size: 0.875rem;
+  padding: 0;
+  text-decoration: none;
+}
+
+.forgot-password:hover,
+.signup-link:hover {
+  text-decoration: underline;
+}
+.registartion-footer {
+  margin-top: 15px;
+  text-align: center;
 }
 
 .back-to-login-link {
-    background: none;
-    border: none;
-    color: #007bff;
-    cursor: pointer;
-    padding: 0;
-    font-size: inherit;
-    text-decoration: underline;
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  padding: 0;
+  font-size: inherit;
+  text-decoration: underline;
 }
 
 .back-to-login-link:hover {
-    color: #0056b3;
-    text-decoration: none;
+  color: #0056b3;
+  text-decoration: none;
 }
