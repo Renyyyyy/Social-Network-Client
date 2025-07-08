@@ -1,13 +1,12 @@
-import { Outlet } from 'react-router-dom';
-import './App.css';
-import AuthChecker from './components/forms/authChecker/AuthChecker';
+import { Outlet } from "react-router-dom";
+import "./App.css";
 
-const App = () => {
-    return (
-        <div className="app-container">
-            <Outlet/>
-        </div>
-    );
+const App: React.FC = () => {
+  return (
+    <div className="app-container">
+      <Outlet />
+    </div>
+  );
 };
 
 export default App;
