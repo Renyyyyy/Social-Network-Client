@@ -1,0 +1,105 @@
+  .login-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .login-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+  
+  .login-form {
+    width: 90%;
+  }
+  
+  .login-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  .forgot-password {
+    color: #2563eb;
+    font-size: 0.875rem;
+    text-decoration: none;
+  }
+  
+  .forgot-password:hover {
+    text-decoration: underline;
+  }
+  
+  .login-footer {
+    margin-top: 1.5rem;
+    text-align: center;
+  }
+  
+  .footer-text {
+    color: #64748b;
+    font-size: 0.875rem;
+  }
+  
+  .signup-link {
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: 500;
+  }
+  
+  .signup-link:hover {
+    text-decoration: underline;
+  }
+
+  .forgot-password,
+  .signup-link {
+      background: none;
+      border: none;
+      color: #2563eb;
+      cursor: pointer;
+      font-size: 0.875rem;
+      padding: 0;
+      text-decoration: none;
+  }
+
+  .forgot-password:hover,
+  .signup-link:hover {
+      text-decoration: underline;
+  }
+
+  .input-field {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.input-field[type="textarea"],
+.input-field.textarea { 
+    min-height: 100px;
+    resize: vertical; 
+}
+
+.error {
+    border-color: red;
+}
+
+.error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 4px;
+}
+
+.input-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.required {
+    color: red;
+    margin-left: 4px;
+}
