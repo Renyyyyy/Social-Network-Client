@@ -9,7 +9,7 @@ import { getAll } from "../../../store/thunks/thunksUser";
 
 const UsersComponent = () => {
   const dispatch = useAppDispatch();
-
+  debugger;
   const status = useAppSelector(selectUserStatus);
   const error = useAppSelector(selectUserError);
 

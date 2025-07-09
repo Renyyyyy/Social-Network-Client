@@ -63,7 +63,6 @@ export const registerUser = createAppAsyncThunk(
 export const checkAuth = createAppAsyncThunk(
   "auth/check",
   async (_, { dispatch }) => {
-    dispatch(setStatus("loading"));
     try {
       const token = localStorage.getItem("accessToken");
       if (token) {

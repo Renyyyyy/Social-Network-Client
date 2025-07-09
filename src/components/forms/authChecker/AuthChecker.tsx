@@ -1,9 +1,7 @@
-// AuthChecker.tsx
 import React, { useEffect, useState } from "react";
 import "./AuthChecker.css";
 import LoginForm from "../loginForm/LoginForm";
-import { pingBackend } from "../../../api/api";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import RegistrationForm from "../registartionForm/RegistrationForm";
 import { checkAuth } from "../../../store/thunks/thunksAuth";
@@ -81,11 +79,21 @@ const AuthChecker: React.FC<AuthCheckerProps> = ({ form = "login" }) => {
 
   if (status === "checking" || authStatus === "loading") {
     return (
-      <div className="status-message">
-        <div className="loader"></div>
-        <p>Проверка соединения с сервером...</p>
+      <div className="auth-checker-container">
+        <div className="status-message">
+          <div className="loader"></div>
+          <p>Проверка соединения с сервером...</p>
+        </div>
       </div>
     );
+  }
+
+  if (
+    isAuthenticated &&
+    location.pathname !== "/login" &&
+    location.pathname !== "/registration"
+  ) {
+    return <Outlet />;
   }
 
   return (

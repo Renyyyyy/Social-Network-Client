@@ -1,7 +1,7 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { LocalStorageKey } from '../../types';
+import { createSlice } from "@reduxjs/toolkit";
+import { LocalStorageKey } from "../../types";
 
-export type AuthStatus = 'idle' | 'loading' | 'succeeded' | 'failed';
+export type AuthStatus = "idle" | "loading" | "succeeded" | "failed";
 
 export interface AuthState {
   user: User | null;
@@ -32,44 +32,47 @@ export const initialState: AuthState = {
   user: null,
   token: null,
   isAuthenticated: false,
-  status: 'idle',
+  status: "idle",
   error: null,
 };
 
 const authSlice = createSlice({
-  name: 'auth',
+  name: "auth",
   initialState,
   reducers: {
-    setToken: (state, action: {payload: string}) => {
+    setToken: (state, action: { payload: string }) => {
       state.token = action.payload;
     },
-    setIsAuth: (state, action: {payload: boolean}) => {
+    setIsAuth: (state, action: { payload: boolean }) => {
       state.isAuthenticated = action.payload;
     },
-    setUser: (state, action: {payload: User}) => {
+    setUser: (state, action: { payload: User }) => {
       state.user = action.payload;
     },
-    setStatus: (state, action: {payload: AuthStatus}) => {
+    setStatus: (state, action: { payload: AuthStatus }) => {
       state.status = action.payload;
     },
-    setError: (state, action: {payload: string}) => {
+    setError: (state, action: { payload: string }) => {
       state.error = action.payload;
     },
     logout: (state) => {
       state.user = null;
       state.token = null;
-      state.status = 'idle';
+      state.status = "idle";
       state.error = null;
       localStorage.removeItem(LocalStorageKey.ACCESS_TOKEN);
     },
   },
 });
 
-export const { logout, setStatus, setUser, setIsAuth, setError, setToken} = authSlice.actions;
+export const { logout, setStatus, setUser, setIsAuth, setError, setToken } =
+  authSlice.actions;
 export default authSlice.reducer;
 
-export const selectIsAuthenticated = (state: { auth: AuthState }) => state.auth.isAuthenticated;
+export const selectIsAuthenticated = (state: { auth: AuthState }) =>
+  state.auth.isAuthenticated;
 export const selectAuthUser = (state: { auth: AuthState }) => state.auth.user;
 export const selectAuthToken = (state: { auth: AuthState }) => state.auth.token;
-export const selectAuthStatus = (state: { auth: AuthState }) => state.auth.status;
+export const selectAuthStatus = (state: { auth: AuthState }) =>
+  state.auth.status;
 export const selectAuthError = (state: { auth: AuthState }) => state.auth.error;
