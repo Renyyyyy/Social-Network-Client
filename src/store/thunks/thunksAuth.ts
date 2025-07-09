@@ -17,18 +17,16 @@ export const loginUser = createAppAsyncThunk(
     dispatch(setStatus("loading"));
     dispatch(setError(""));
     try {
-      const response = await api.post<{ token: string; user: User }>(
-        `/auth/login`,
-        {
-          login,
-          password,
-        }
-      );
+      const response = await api.post<{ token: string }>(`/auth/login`, {
+        login,
+        password,
+      });
       dispatch(setStatus("succeeded"));
       const token = response.data.token;
       localStorage.setItem("accessToken", token);
       dispatch(setToken(token));
-      dispatch(setUser(response.data.user));
+      const userResponse = await api.get<User>(`/auth/me`);
+      dispatch(setUser(userResponse.data));
       dispatch(setIsAuth(true));
     } catch (error: unknown) {
       dispatch(setStatus("failed"));
@@ -43,19 +41,17 @@ export const registerUser = createAppAsyncThunk(
     dispatch(setStatus("loading"));
     dispatch(setError(""));
     try {
-      const response = await api.post<{ token: string; user: User }>(
-        `/auth/registration`,
-        {
-          nickname,
-          login,
-          password,
-        }
-      );
+      const response = await api.post<{ token: string }>(`/auth/registration`, {
+        nickname,
+        login,
+        password,
+      });
       dispatch(setStatus("succeeded"));
       const token = response.data.token;
       localStorage.setItem("accessToken", token);
       dispatch(setToken(token));
-      dispatch(setUser(response.data.user));
+      const userResponse = await api.get<User>(`/auth/me`);
+      dispatch(setUser(userResponse.data));
       dispatch(setIsAuth(true));
     } catch (error: any) {
       dispatch(setStatus("failed"));
@@ -73,7 +69,6 @@ export const checkAuth = createAppAsyncThunk(
       if (token) {
         const response = await api.get<User>(`/auth/me`);
         dispatch(setUser(response.data));
-        dispatch(setStatus("succeeded"));
         dispatch(setIsAuth(true));
         if (!response.data) {
           throw new Error("User data not found");
@@ -83,9 +78,10 @@ export const checkAuth = createAppAsyncThunk(
         throw new Error("Token not found");
       }
     } catch (error: any) {
-      localStorage.removeItem("accessToken");
-      dispatch(setStatus("failed"));
-      dispatch(setError("Auth error"));
+      if (error.response?.status !== 401) {
+        dispatch(setStatus("failed"));
+        dispatch(setError("Auth error"));
+      }
     }
   }
 );

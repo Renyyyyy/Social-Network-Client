@@ -16,11 +16,11 @@ export const getAll = createAppAsyncThunk(
     dispatch(setError(""));
     try {
       const response = await api.get<User[]>(`/users`);
-      dispatch(setStatus('succeeded'));
+      dispatch(setStatus("succeeded"));
       dispatch(setUsers(response.data));
     } catch (error) {
-        dispatch(setStatus('failed'));
-        dispatch(setError('Failed to fetch users'));
+      dispatch(setStatus("failed"));
+      dispatch(setError("Failed to fetch users"));
     }
   }
 );
@@ -28,7 +28,6 @@ export const getAll = createAppAsyncThunk(
 export const getUserById = createAppAsyncThunk(
   "users/getUserById",
   async (userId: number, { dispatch }) => {
-    ;
     dispatch(setStatus("loading"));
     dispatch(setError(""));
     try {
@@ -41,10 +40,3 @@ export const getUserById = createAppAsyncThunk(
     }
   }
 );
-
-export const setCurrentUser = (
-  state: UsersState,
-  action: { payload: User }
-) => {
-  state.user = action.payload;
-};

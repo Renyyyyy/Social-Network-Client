@@ -31,14 +31,16 @@ const AuthChecker: React.FC<AuthCheckerProps> = ({ form = "login" }) => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(checkAuth());
-  }, [dispatch]);
+    if (!isAuthenticated) {
+      dispatch(checkAuth());
+    }
+  }, [dispatch, isAuthenticated]);
 
   useEffect(() => {
     if (isAuthenticated) {
       const allowedRoutes = ["/login", "/registration", "/"];
       if (allowedRoutes.includes(location.pathname)) {
-        const userId = authUser?.id || localStorage.getItem("currUserId");
+        const userId = authUser?.id;
         navigate(`/profile/${userId}`);
       }
     } else {
