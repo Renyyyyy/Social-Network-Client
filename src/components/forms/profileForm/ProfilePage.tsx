@@ -10,7 +10,7 @@ import {
   updateProfile,
 } from "../../../store/thunks/thunksProfile";
 import { getUserById } from "../../../store/thunks/thunksUser";
-import { selectAuthUser } from "../../../store/slices/authSlice";
+import { logout, selectAuthUser } from "../../../store/slices/authSlice";
 import {
   selectProfile,
   selectProfileError,
@@ -87,6 +87,14 @@ const ProfilePage = () => {
             {isEditing ? "Cancel" : "Edit Profile"}
           </Button>
         )}
+        <Button
+          onClick={() => {
+            dispatch(logout());
+            window.location.href = "/login";
+          }}
+        >
+          {"logout"}
+        </Button>
       </div>
 
       <div className="profile-section">
