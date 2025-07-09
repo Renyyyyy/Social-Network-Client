@@ -9,13 +9,15 @@ export interface User {
 }
 
 export interface UsersState {
-  user: User | User[];
+  users: User[];
+  user: User | null;
   status: UsersStatus;
   error: string | null;
 }
 
 export const initialState: UsersState = {
-  user: [],
+  users: [],
+  user: null,
   status: "idle",
   error: null,
 };
@@ -25,7 +27,7 @@ const usersSlice = createSlice({
   initialState,
   reducers: {
     setUsers: (state, action: { payload: User[] }) => {
-      state.user = action.payload;
+      state.users = action.payload;
     },
     setUser: (state, action: { payload: User }) => {
       state.user = action.payload;
@@ -42,7 +44,10 @@ const usersSlice = createSlice({
 export const { setStatus, setError, setUsers, setUser } = usersSlice.actions;
 
 export const selectUser = (state: { users: UsersState }) => state.users.user;
-export const selectUserStatus = (state: { users: UsersState }) => state.users.status;
-export const selectUserError = (state: { users: UsersState }) => state.users.error;
+export const selectUsers = (state: { users: UsersState }) => state.users.users;
+export const selectUserStatus = (state: { users: UsersState }) =>
+  state.users.status;
+export const selectUserError = (state: { users: UsersState }) =>
+  state.users.error;
 
 export default usersSlice.reducer;

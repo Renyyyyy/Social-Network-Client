@@ -78,6 +78,9 @@ const ProfilePage = () => {
     <Card className="profile-card">
       <div className="profile-header">
         <h2>{profile.user.nickname}</h2>
+      </div>
+
+      <div className="profile-section">
         {authUser?.id === profile.userId && (
           <Button
             onClick={() => setIsEditing(!isEditing)}
@@ -87,9 +90,6 @@ const ProfilePage = () => {
             {isEditing ? "Cancel" : "Edit Profile"}
           </Button>
         )}
-      </div>
-
-      <div className="profile-section">
         <h3>About</h3>
         {isEditing ? (
           <>

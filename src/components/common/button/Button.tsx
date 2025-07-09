@@ -3,7 +3,7 @@ import "./Button.css";
 
 interface ButtonProps {
   children: React.ReactNode;
-  variant?: "primary" | "secondary";
+  variant?: "primary" | "secondary" | "outline";
   isLoading?: boolean;
   onClick?: () => void;
   type?: "button" | "submit" | "reset";

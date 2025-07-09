@@ -38,3 +38,13 @@
 .button.loading {
   cursor: wait;
 }
+
+.button.outline {
+  background-color: transparent;
+  border: 1px solid #2563eb;
+  color: #2563eb;
+}
+
+.button.outline:hover:not(:disabled) {
+  background-color: #ebf4ff;
+}

@@ -10,6 +10,8 @@
   display: flex;
   flex-direction: column;
   z-index: 100;
+  height: 100vh;
+  overflow-y: auto;
 }
 
 .sidebar-nav {
