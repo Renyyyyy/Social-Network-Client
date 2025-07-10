@@ -38,10 +38,16 @@ const usersSlice = createSlice({
     setError: (state, action: { payload: string }) => {
       state.error = action.payload;
     },
+    resetUsers: (state) => {
+      state.status = "idle";
+      state.error = "";
+      state.users = [];
+    },
   },
 });
 
-export const { setStatus, setError, setUsers, setUser } = usersSlice.actions;
+export const { resetUsers, setStatus, setError, setUsers, setUser } =
+  usersSlice.actions;
 
 export const selectUser = (state: { users: UsersState }) => state.users.user;
 export const selectUsers = (state: { users: UsersState }) => state.users.users;

@@ -1,10 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import { useNavigate } from "react-router-dom";
 import {
   selectUserError,
   selectUsers,
   selectUserStatus,
+  setStatus,
 } from "../../../store/slices/usersSlice";
 import { getAll } from "../../../store/thunks/thunksUser";
 import Card from "../../common/card/Card";
@@ -17,12 +18,22 @@ const UsersComponent = () => {
   const status = useAppSelector(selectUserStatus);
   const error = useAppSelector(selectUserError);
   const users = useAppSelector(selectUsers);
+  const [initialLoad, setInitialLoad] = useState(false);
 
   useEffect(() => {
-    if (status === "idle") {
+    dispatch(setStatus("idle"));
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (status === "idle" && !initialLoad) {
+      dispatch(getAll());
+      setInitialLoad(true);
+    }
+
+    if (status === "failed") {
       dispatch(getAll());
     }
-  }, [status, dispatch]);
+  }, [status, dispatch, initialLoad]);
 
   return (
     <div className="users-container">
@@ -40,7 +51,9 @@ const UsersComponent = () => {
           <h3>Ошибка загрузки</h3>
           <p className="error-message">{error}</p>
           <Button
-            onClick={() => dispatch(getAll())}
+            onClick={() => {
+              dispatch(getAll());
+            }}
             variant="primary"
             className="retry-button"
           >

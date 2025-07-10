@@ -4,11 +4,13 @@ import "./Sidebar.css";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import { logout, selectAuthUser } from "../../../store/slices/authSlice";
 import Button from "../../common/button/Button";
+import { resetUsers } from "../../../store/slices/usersSlice";
 
 const Sidebar = () => {
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectAuthUser);
   const handleLogout = () => {
+    dispatch(resetUsers());
     dispatch(logout());
     window.location.href = "/login";
   };
