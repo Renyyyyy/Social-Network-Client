@@ -23,12 +23,14 @@ export interface Post {
 
 export interface PostsState {
   currentPost: Post | null;
+  userPosts: Post[];
   status: PostsStatus;
   error: string | null;
 }
 
 export const initialState: PostsState = {
   currentPost: null,
+  userPosts: [],
   status: "idle",
   error: null,
 };
@@ -39,6 +41,9 @@ const postsSlice = createSlice({
   reducers: {
     setCurrentPost: (state, action: { payload: Post | null }) => {
       state.currentPost = action.payload;
+    },
+    setUserPosts: (state, action: { payload: Post[] }) => {
+      state.userPosts = action.payload;
     },
     setStatus: (state, action: { payload: PostsStatus }) => {
       state.status = action.payload;
@@ -54,8 +59,13 @@ const postsSlice = createSlice({
   },
 });
 
-export const { setCurrentPost, setStatus, setError, resetPostState } =
-  postsSlice.actions;
+export const {
+  setUserPosts,
+  setCurrentPost,
+  setStatus,
+  setError,
+  resetPostState,
+} = postsSlice.actions;
 
 export const selectCurrentPost = (state: { posts: PostsState }) =>
   state.posts.currentPost;
@@ -63,5 +73,7 @@ export const selectPostStatus = (state: { posts: PostsState }) =>
   state.posts.status;
 export const selectPostError = (state: { posts: PostsState }) =>
   state.posts.error;
+export const selectUserPosts = (state: { posts: PostsState }) =>
+  state.posts.userPosts;
 
 export default postsSlice.reducer;

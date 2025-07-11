@@ -5,25 +5,24 @@ import {
   setCurrentPost,
   setError,
   setStatus,
+  setUserPosts,
 } from "../slices/postsSlice";
 
 export const createPost = createAppAsyncThunk(
   "posts/create",
-  async ({ title, content, author }: Post, { dispatch }) => {
+  async (postData: Omit<Post, "id">, { dispatch }) => {
     dispatch(setStatus("loading"));
-    dispatch(setError(""));
     try {
-      const response = await api.post<{ post: Post }>(`/posts`, {
-        title,
-        content,
-        author,
+      const response = await api.post<Post>("/posts", {
+        title: postData.title,
+        content: postData.content,
       });
-      const post = response.data.post;
-      dispatch(setCurrentPost(post));
       dispatch(setStatus("succeeded"));
-    } catch (error: unknown) {
+      return response.data;
+    } catch (error: any) {
       dispatch(setStatus("failed"));
-      dispatch(setError("Login error"));
+      dispatch(setError(error.message || "Failed to create post"));
+      throw error;
     }
   }
 );
@@ -44,7 +43,7 @@ export const updatePost = createAppAsyncThunk(
       dispatch(setCurrentPost(post));
     } catch (error: unknown) {
       dispatch(setStatus("failed"));
-      dispatch(setError("Login error"));
+      dispatch(setError("Failed to update post"));
     }
   }
 );
@@ -59,7 +58,7 @@ export const deletePost = createAppAsyncThunk(
       dispatch(setStatus("succeeded"));
     } catch (error: unknown) {
       dispatch(setStatus("failed"));
-      dispatch(setError("Login error"));
+      dispatch(setError("Failed to delete post"));
     }
   }
 );
@@ -76,7 +75,24 @@ export const fetchPostById = createAppAsyncThunk(
       dispatch(setStatus("succeeded"));
     } catch (error: unknown) {
       dispatch(setStatus("failed"));
-      dispatch(setError("Login error"));
+      dispatch(setError("Failed to fetch post"));
+    }
+  }
+);
+
+export const fetchUserPosts = createAppAsyncThunk(
+  "posts/fetchUserPosts",
+  async (userId: number, { dispatch }) => {
+    dispatch(setStatus("loading"));
+    try {
+      const response = await api.get<Post[]>(`/posts/user/${userId}`);
+      dispatch(setUserPosts(response.data));
+      dispatch(setStatus("succeeded"));
+      return response.data;
+    } catch (error: any) {
+      dispatch(setStatus("failed"));
+      dispatch(setError("Failed to fetch user posts"));
+      throw error;
     }
   }
 );

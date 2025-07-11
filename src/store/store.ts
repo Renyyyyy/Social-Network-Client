@@ -2,12 +2,14 @@ import { configureStore, createAsyncThunk, Middleware } from "@reduxjs/toolkit";
 import usersReducer from "../store/slices/usersSlice";
 import authReducer from "../store/slices/authSlice";
 import profileReducer from "../store/slices/profileSlice";
+import postsReducer from "../store/slices/postsSlice";
 
 export const store = configureStore({
   reducer: {
     users: usersReducer,
     auth: authReducer,
     profile: profileReducer,
+    posts: postsReducer,
   },
 });
 

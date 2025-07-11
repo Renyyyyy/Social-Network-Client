@@ -28,10 +28,18 @@ const PostCard: React.FC<PostCardProps> = ({
 
         {isOwner && (
           <div className="post-actions">
-            <button className="action-btn edit-btn" onClick={onEdit}>
+            <button
+              className="action-btn edit-btn"
+              onClick={onEdit}
+              aria-label="Edit post"
+            >
               ✏️
             </button>
-            <button className="action-btn delete-btn" onClick={onDelete}>
+            <button
+              className="action-btn delete-btn"
+              onClick={onDelete}
+              aria-label="Delete post"
+            >
               🗑️
             </button>
           </div>
