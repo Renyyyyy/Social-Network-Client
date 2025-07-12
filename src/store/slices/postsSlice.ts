@@ -3,13 +3,21 @@ import { User } from "./usersSlice";
 
 export type PostsStatus = "idle" | "loading" | "succeeded" | "failed";
 
-interface Comment {
+export interface Comment {
   id: number;
   content: string;
+  userId: number;
+  postId: number;
+  user: {
+    id: number;
+    nickname: string;
+  };
 }
 
-interface Like {
+export interface Like {
   id: number;
+  userId: number;
+  postId: number;
 }
 
 export interface Post {
@@ -51,6 +59,61 @@ const postsSlice = createSlice({
     setError: (state, action: { payload: string }) => {
       state.error = action.payload;
     },
+    addLikeToPost: (
+      state,
+      action: { payload: { postId: number; like: Like } }
+    ) => {
+      const { postId, like } = action.payload;
+      const post = state.userPosts.find((p) => p.id === postId);
+      if (post) {
+        post.likes.push(like);
+      }
+    },
+    removeLikeFromPost: (
+      state,
+      action: { payload: { postId: number; likeId: number } }
+    ) => {
+      const { postId, likeId } = action.payload;
+      const post = state.userPosts.find((p) => p.id === postId);
+      if (post) {
+        post.likes = post.likes.filter((l) => l.id !== likeId);
+      }
+    },
+    addCommentToPost: (
+      state,
+      action: { payload: { postId: number; comment: Comment } }
+    ) => {
+      const { postId, comment } = action.payload;
+      const post = state.userPosts.find((p) => p.id === postId);
+      if (post) {
+        post.comments.push(comment);
+      }
+    },
+    updateCommentInPost: (
+      state,
+      action: {
+        payload: { postId: number; commentId: number; content: string };
+      }
+    ) => {
+      const { postId, commentId, content } = action.payload;
+      const post = state.userPosts.find((p) => p.id === postId);
+      if (post) {
+        const comment = post.comments.find((c) => c.id === commentId);
+        if (comment) {
+          comment.content = content;
+        }
+      }
+    },
+    removeCommentFromPost: (
+      state,
+      action: { payload: { postId: number; commentId: number } }
+    ) => {
+      const { postId, commentId } = action.payload;
+      const post = state.userPosts.find((p) => p.id === postId);
+      if (post) {
+        post.comments = post.comments.filter((c) => c.id !== commentId);
+      }
+    },
     resetPostState: (state) => {
       state.currentPost = null;
       state.status = "idle";
@@ -65,6 +128,11 @@ export const {
   setStatus,
   setError,
   resetPostState,
+  addLikeToPost,
+  removeLikeFromPost,
+  addCommentToPost,
+  updateCommentInPost,
+  removeCommentFromPost,
 } = postsSlice.actions;
 
 export const selectCurrentPost = (state: { posts: PostsState }) =>
