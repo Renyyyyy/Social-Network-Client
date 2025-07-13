@@ -4,9 +4,11 @@ import {
   Post,
   setCurrentPost,
   setError,
+  setFeedPosts,
   setStatus,
   setUserPosts,
 } from "../slices/postsSlice";
+import { User } from "../slices/usersSlice";
 
 export const createPost = createAppAsyncThunk(
   "posts/create",
@@ -93,6 +95,29 @@ export const fetchUserPosts = createAppAsyncThunk(
       dispatch(setStatus("failed"));
       dispatch(setError("Failed to fetch user posts"));
       throw error;
+    }
+  }
+);
+
+export const fetchFollowersPosts = createAppAsyncThunk(
+  "posts/fetchFollowersPosts",
+  async (following: User[], { dispatch }) => {
+    dispatch(setStatus("loading"));
+    try {
+      const postsArrays = await Promise.all(
+        following.map((user) =>
+          api.get<Post[]>(`/posts/user/${user.id}`).then((res) => res.data)
+        )
+      );
+
+      const allPosts = postsArrays.flat();
+      allPosts.sort((a, b) => b.id - a.id);
+
+      dispatch(setFeedPosts(allPosts));
+      dispatch(setStatus("succeeded"));
+    } catch (err) {
+      dispatch(setError("Failed to load posts from followed users"));
+      dispatch(setStatus("failed"));
     }
   }
 );

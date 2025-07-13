@@ -31,7 +31,6 @@ export const fetchFollowing = createAppAsyncThunk(
     dispatch(setStatus("loading"));
     try {
       const response = await api.get<User[]>(`/followers/${userId}/following`);
-      console.log(response);
       dispatch(setFollowing(response.data));
       dispatch(setStatus("succeeded"));
     } catch (error) {

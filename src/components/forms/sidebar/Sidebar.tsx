@@ -53,6 +53,14 @@ const Sidebar = () => {
         >
           Подписки
         </NavLink>
+        <NavLink
+          to="/newsfeed"
+          className={({ isActive }) =>
+            `sidebar-link ${isActive ? "active" : ""}`
+          }
+        >
+          Лента новостей
+        </NavLink>
       </nav>
 
       <div className="logout-container">

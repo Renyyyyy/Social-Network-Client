@@ -5,6 +5,7 @@ import ProfilePage from "./components/forms/profileForm/ProfilePage";
 import Layout from "./components/layout/Layout";
 import FollowersList from "./components/forms/FollowPages/followersList/FollowersList";
 import FollowingList from "./components/forms/FollowPages/followingList/FollowingList";
+import NewsFeed from "./components/forms/newsFeed/NewsFeed";
 
 const BASE_NAME = "";
 
@@ -35,6 +36,10 @@ const router = createBrowserRouter(
             {
               path: "/following",
               element: <FollowingList />,
+            },
+            {
+              path: "/newsfeed",
+              element: <NewsFeed />,
             },
           ],
         },

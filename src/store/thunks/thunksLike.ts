@@ -10,24 +10,20 @@ export const toggleLike = createAppAsyncThunk(
     dispatch(setStatus("loading"));
     try {
       const state = getState();
-
       const currentUser = state.auth.user;
-      if (!currentUser) {
-        throw new Error("User not authenticated");
-      }
+      if (!currentUser) throw new Error("User not authenticated");
 
       const post =
         state.posts.userPosts.find((p) => p.id === postId) ||
+        state.posts.feedsPosts.find((p) => p.id === postId) ||
         (state.posts.currentPost?.id === postId
           ? state.posts.currentPost
           : null);
 
-      if (!post) {
-        throw new Error("Post not found");
-      }
+      if (!post) throw new Error("Post not found");
 
       const userLike = post.likes.find(
-        (like) => like.userId === currentUser.id && like.postId === postId
+        (like) => like.userId === currentUser.id
       );
 
       if (userLike) {
@@ -49,6 +45,7 @@ export const toggleLike = createAppAsyncThunk(
       }
 
       dispatch(setStatus("succeeded"));
+      return postId;
     } catch (error: any) {
       dispatch(setStatus("failed"));
       const message = error.response?.data?.message || error.message;

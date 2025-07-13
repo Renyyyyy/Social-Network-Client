@@ -32,6 +32,7 @@ export interface Post {
 export interface PostsState {
   currentPost: Post | null;
   userPosts: Post[];
+  feedsPosts: Post[];
   status: PostsStatus;
   error: string | null;
 }
@@ -39,6 +40,7 @@ export interface PostsState {
 export const initialState: PostsState = {
   currentPost: null,
   userPosts: [],
+  feedsPosts: [],
   status: "idle",
   error: null,
 };
@@ -59,6 +61,9 @@ const postsSlice = createSlice({
     setError: (state, action: { payload: string }) => {
       state.error = action.payload;
     },
+    setFeedPosts: (state, action: { payload: Post[] }) => {
+      state.feedsPosts = action.payload;
+    },
     addLikeToPost: (
       state,
       action: { payload: { postId: number; like: Like } }
@@ -67,6 +72,11 @@ const postsSlice = createSlice({
       const post = state.userPosts.find((p) => p.id === postId);
       if (post) {
         post.likes.push(like);
+      }
+
+      const feedPost = state.feedsPosts.find((p) => p.id === postId);
+      if (feedPost) {
+        feedPost.likes.push(like);
       }
     },
     removeLikeFromPost: (
@@ -78,6 +88,11 @@ const postsSlice = createSlice({
       if (post) {
         post.likes = post.likes.filter((l) => l.id !== likeId);
       }
+
+      const feedPost = state.feedsPosts.find((p) => p.id === postId);
+      if (feedPost) {
+        feedPost.likes = feedPost.likes.filter((l) => l.id !== likeId);
+      }
     },
     addCommentToPost: (
       state,
@@ -87,6 +102,11 @@ const postsSlice = createSlice({
       const post = state.userPosts.find((p) => p.id === postId);
       if (post) {
         post.comments.push(comment);
+      }
+
+      const feedPost = state.feedsPosts.find((p) => p.id === postId);
+      if (feedPost) {
+        feedPost.comments.push(comment);
       }
     },
     updateCommentInPost: (
@@ -103,6 +123,14 @@ const postsSlice = createSlice({
           comment.content = content;
         }
       }
+
+      const feedPost = state.feedsPosts.find((p) => p.id === postId);
+      if (feedPost) {
+        const comment = feedPost.comments.find((c) => c.id === commentId);
+        if (comment) {
+          comment.content = content;
+        }
+      }
     },
     removeCommentFromPost: (
       state,
@@ -112,6 +140,11 @@ const postsSlice = createSlice({
       const post = state.userPosts.find((p) => p.id === postId);
       if (post) {
         post.comments = post.comments.filter((c) => c.id !== commentId);
+      }
+
+      const feedPost = state.feedsPosts.find((p) => p.id === postId);
+      if (feedPost) {
+        feedPost.comments = feedPost.comments.filter((c) => c.id !== commentId);
       }
     },
     resetPostState: (state) => {
@@ -123,6 +156,7 @@ const postsSlice = createSlice({
 });
 
 export const {
+  setFeedPosts,
   setUserPosts,
   setCurrentPost,
   setStatus,
@@ -143,5 +177,7 @@ export const selectPostError = (state: { posts: PostsState }) =>
   state.posts.error;
 export const selectUserPosts = (state: { posts: PostsState }) =>
   state.posts.userPosts;
+export const selectNewsFeed = (state: { posts: PostsState }) =>
+  state.posts.feedsPosts;
 
 export default postsSlice.reducer;

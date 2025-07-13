@@ -61,10 +61,18 @@ export const deleteComment = createAppAsyncThunk(
   async (commentId: number, { dispatch, getState }) => {
     try {
       await api.delete(`/comments/${commentId}`);
+
       const state = getState();
-      const post = state.posts.userPosts.find((p) =>
-        p.comments.some((c) => c.id === commentId)
-      );
+      const post =
+        state.posts.userPosts.find((p) =>
+          p.comments.some((c) => c.id === commentId)
+        ) ||
+        state.posts.feedsPosts.find((p) =>
+          p.comments.some((c) => c.id === commentId)
+        ) ||
+        (state.posts.currentPost?.comments.some((c) => c.id === commentId)
+          ? state.posts.currentPost
+          : null);
 
       if (post) {
         dispatch(
