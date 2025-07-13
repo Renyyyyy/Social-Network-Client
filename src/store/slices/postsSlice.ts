@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { User } from "./usersSlice";
 
 export type PostsStatus = "idle" | "loading" | "succeeded" | "failed";
@@ -35,6 +35,12 @@ export interface PostsState {
   feedsPosts: Post[];
   status: PostsStatus;
   error: string | null;
+  pagination: {
+    currentPage: number;
+    totalPages: number;
+    totalItems: number;
+    itemsPerPage: number;
+  };
 }
 
 export const initialState: PostsState = {
@@ -43,6 +49,12 @@ export const initialState: PostsState = {
   feedsPosts: [],
   status: "idle",
   error: null,
+  pagination: {
+    currentPage: 1,
+    totalPages: 0,
+    totalItems: 0,
+    itemsPerPage: 10,
+  },
 };
 
 const postsSlice = createSlice({
@@ -63,6 +75,19 @@ const postsSlice = createSlice({
     },
     setFeedPosts: (state, action: { payload: Post[] }) => {
       state.feedsPosts = action.payload;
+    },
+    setPagination: (
+      state,
+      action: PayloadAction<{
+        currentPage: number;
+        totalPages: number;
+        totalItems: number;
+      }>
+    ) => {
+      state.pagination = {
+        ...state.pagination,
+        ...action.payload,
+      };
     },
     addLikeToPost: (
       state,
@@ -156,6 +181,7 @@ const postsSlice = createSlice({
 });
 
 export const {
+  setPagination,
   setFeedPosts,
   setUserPosts,
   setCurrentPost,

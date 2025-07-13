@@ -1,5 +1,5 @@
 // NewsFeed.tsx
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import { fetchFollowing } from "../../../store/thunks/thunksFollower";
 import { selectFollowing } from "../../../store/slices/followerSlice";
@@ -10,7 +10,10 @@ import {
   selectNewsFeed,
 } from "../../../store/slices/postsSlice";
 import "./NewsFeed.css";
-import { fetchFollowersPosts } from "../../../store/thunks/thunksPost";
+import {
+  fetchFollowersPosts,
+  fetchPaginatedFollowersPosts,
+} from "../../../store/thunks/thunksPost";
 import PostCard from "../../common/postCard/PostCard";
 
 const NewsFeed = () => {
@@ -20,6 +23,8 @@ const NewsFeed = () => {
   const newsFeed = useAppSelector(selectNewsFeed);
   const status = useAppSelector(selectPostStatus);
   const error = useAppSelector(selectPostError);
+  const pagination = useAppSelector((state) => state.posts.pagination);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     if (authUser) {
@@ -27,7 +32,12 @@ const NewsFeed = () => {
         try {
           await dispatch(fetchFollowing(authUser.id)).unwrap();
           if (following.length > 0) {
-            await dispatch(fetchFollowersPosts(following)).unwrap();
+            await dispatch(
+              fetchPaginatedFollowersPosts({
+                following,
+                page: currentPage,
+              })
+            ).unwrap();
           }
         } catch (err) {
           console.error("Failed to load news feed:", err);
@@ -37,11 +47,16 @@ const NewsFeed = () => {
     }
   }, [authUser, dispatch]);
 
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage);
+    dispatch(fetchPaginatedFollowersPosts({ following, page: newPage }));
+  };
+
   useEffect(() => {
     if (authUser && following.length > 0) {
-      dispatch(fetchFollowersPosts(following));
+      dispatch(fetchPaginatedFollowersPosts({ following, page: currentPage }));
     }
-  }, [following, authUser, dispatch]);
+  }, [following, authUser, dispatch, currentPage]);
 
   if (!authUser) {
     return (
@@ -72,6 +87,27 @@ const NewsFeed = () => {
           {newsFeed.map((post) => (
             <PostCard key={post.id} post={post} />
           ))}
+        </div>
+      )}
+      {newsFeed.length > 0 && (
+        <div className="pagination-controls">
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            Previous
+          </button>
+
+          <span>
+            Page {currentPage} of {pagination.totalPages}
+          </span>
+
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === pagination.totalPages}
+          >
+            Next
+          </button>
         </div>
       )}
     </div>

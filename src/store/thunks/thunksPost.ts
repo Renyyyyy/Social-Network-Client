@@ -5,6 +5,7 @@ import {
   setCurrentPost,
   setError,
   setFeedPosts,
+  setPagination,
   setStatus,
   setUserPosts,
 } from "../slices/postsSlice";
@@ -117,6 +118,47 @@ export const fetchFollowersPosts = createAppAsyncThunk(
       dispatch(setStatus("succeeded"));
     } catch (err) {
       dispatch(setError("Failed to load posts from followed users"));
+      dispatch(setStatus("failed"));
+    }
+  }
+);
+
+export const fetchPaginatedFollowersPosts = createAppAsyncThunk(
+  "posts/fetchPaginatedFollowersPosts",
+  async (
+    { following, page = 1 }: { following: User[]; page?: number },
+    { dispatch }
+  ) => {
+    dispatch(setStatus("loading"));
+    try {
+      const limit = 10;
+      const offset = (page - 1) * limit;
+
+      const postsArrays = await Promise.all(
+        following.map((user) =>
+          api.get<Post[]>(`/posts/user/${user.id}`).then((res) => res.data)
+        )
+      );
+
+      const allPosts = postsArrays.flat();
+      allPosts.sort((a, b) => b.id - a.id);
+
+      const totalCount = allPosts.length;
+      const totalPages = Math.ceil(totalCount / limit);
+
+      const paginatedPosts = allPosts.slice(offset, offset + limit);
+
+      dispatch(setFeedPosts(paginatedPosts));
+      dispatch(
+        setPagination({
+          currentPage: page,
+          totalPages,
+          totalItems: totalCount,
+        })
+      );
+      dispatch(setStatus("succeeded"));
+    } catch (err) {
+      dispatch(setError("Failed to load posts"));
       dispatch(setStatus("failed"));
     }
   }
