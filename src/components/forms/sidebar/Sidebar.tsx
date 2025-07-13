@@ -26,6 +26,7 @@ const Sidebar = () => {
         >
           Профиль
         </NavLink>
+
         <NavLink
           to={`/users`}
           className={({ isActive }) =>
@@ -33,6 +34,24 @@ const Sidebar = () => {
           }
         >
           Пользователи
+        </NavLink>
+
+        <NavLink
+          to="/followers"
+          className={({ isActive }) =>
+            `sidebar-link ${isActive ? "active" : ""}`
+          }
+        >
+          Подписчики
+        </NavLink>
+
+        <NavLink
+          to="/following"
+          className={({ isActive }) =>
+            `sidebar-link ${isActive ? "active" : ""}`
+          }
+        >
+          Подписки
         </NavLink>
       </nav>
 

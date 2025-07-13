@@ -4,6 +4,7 @@ import authReducer from "../store/slices/authSlice";
 import profileReducer from "../store/slices/profileSlice";
 import postsReducer from "../store/slices/postsSlice";
 import likesReducer from "../store/slices/likeSlice";
+import followerReducer from "../store/slices/followerSlice";
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     profile: profileReducer,
     posts: postsReducer,
     likes: likesReducer,
+    follower: followerReducer,
   },
 });
 

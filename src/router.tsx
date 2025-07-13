@@ -3,6 +3,8 @@ import UsersComponent from "./components/forms/usersComponent/UsersComponent";
 import AuthChecker from "./components/forms/authChecker/AuthChecker";
 import ProfilePage from "./components/forms/profileForm/ProfilePage";
 import Layout from "./components/layout/Layout";
+import FollowersList from "./components/forms/FollowPages/followersList/FollowersList";
+import FollowingList from "./components/forms/FollowPages/followingList/FollowingList";
 
 const BASE_NAME = "";
 
@@ -25,6 +27,14 @@ const router = createBrowserRouter(
             {
               path: "/users",
               element: <UsersComponent />,
+            },
+            {
+              path: "/followers",
+              element: <FollowersList />,
+            },
+            {
+              path: "/following",
+              element: <FollowingList />,
             },
           ],
         },

@@ -30,6 +30,20 @@ import {
   selectUserPosts,
 } from "../../../store/slices/postsSlice";
 import PostCard from "../../common/postCard/PostCard";
+import {
+  followUser,
+  unfollowUser,
+  fetchFollowers,
+  fetchFollowing,
+} from "../../../store/thunks/thunksFollower";
+import {
+  addFollower,
+  addFollowing,
+  removeFollower,
+  removeFollowing,
+  selectFollowerStatus,
+  selectFollowing,
+} from "../../../store/slices/followerSlice";
 
 const ProfilePage = () => {
   const dispatch = useAppDispatch();
@@ -43,6 +57,11 @@ const ProfilePage = () => {
   const postsStatus = useAppSelector(selectPostStatus);
   const postsError = useAppSelector(selectPostError);
   const userPosts = useAppSelector(selectUserPosts);
+
+  const following = useAppSelector(selectFollowing);
+  const followerStatus = useAppSelector(selectFollowerStatus);
+  const [isFollowLoading, setIsFollowLoading] = useState(false);
+  const [isFollowing, setIsFollowing] = useState(false);
 
   const [isEditing, setIsEditing] = useState(false);
   const [about, setAbout] = useState("");
@@ -61,15 +80,71 @@ const ProfilePage = () => {
         dispatch(getUserById(userId));
         dispatch(fetchProfile(userId));
         dispatch(fetchUserPosts(userId));
+        dispatch(fetchFollowers(userId));
+        dispatch(fetchFollowing(userId));
       }
     }
-  }, [dispatch, id]);
+
+    if (authUser) {
+      dispatch(fetchFollowing(authUser.id));
+    }
+  }, [dispatch, id, authUser]);
+
+  useEffect(() => {
+    if (authUser && profile?.user) {
+      const isUserFollowing = following.some(
+        (user) => user.id === profile.user.id
+      );
+      setIsFollowing(isUserFollowing);
+    } else {
+      setIsFollowing(false);
+    }
+  }, [authUser, profile, following]);
 
   useEffect(() => {
     if (profile) {
       setAbout(profile.about);
     }
   }, [profile]);
+
+  const handleFollowAction = async () => {
+    if (
+      !profile ||
+      !profile.user ||
+      !authUser ||
+      authUser.id === profile.user.id
+    )
+      return;
+
+    setIsFollowLoading(true);
+    try {
+      if (isFollowing) {
+        await dispatch(unfollowUser(profile.user.id)).unwrap();
+        dispatch(removeFollowing(profile.user.id));
+      } else {
+        await dispatch(followUser(profile.user.id)).unwrap();
+        dispatch(
+          addFollowing({
+            id: profile.user.id,
+            nickname: profile.user.nickname,
+            login: profile.user.login,
+          })
+        );
+      }
+      setIsFollowing(!isFollowing);
+
+      dispatch(fetchFollowing(authUser.id));
+
+      if (id) {
+        const userId = parseInt(id, 10);
+        dispatch(fetchFollowers(userId));
+      }
+    } catch (error) {
+      console.error("Ошибка при выполнении операции:", error);
+    } finally {
+      setIsFollowLoading(false);
+    }
+  };
 
   const handleSave = async () => {
     if (profile) {
@@ -158,19 +233,35 @@ const ProfilePage = () => {
     );
   }
 
-  if (!profile) {
+  if (!profile || !profile.user) {
     return <div className="not-found">Profile not found</div>;
   }
+
+  const isOwner = authUser?.id === profile.user.id;
 
   return (
     <>
       <Card className="profile-card">
         <div className="profile-header">
           <h2>{profile.user.nickname}</h2>
+          {!isOwner && authUser && (
+            <Button
+              onClick={handleFollowAction}
+              variant={isFollowing ? "secondary" : "primary"}
+              disabled={isFollowLoading || followerStatus === "loading"}
+              className="follow-button"
+            >
+              {isFollowLoading
+                ? "Загрузка..."
+                : isFollowing
+                ? "Отписаться"
+                : "Подписаться"}
+            </Button>
+          )}
         </div>
 
         <div className="profile-section">
-          {authUser?.id === profile.userId && (
+          {isOwner && (
             <Button
               onClick={() => setIsEditing(!isEditing)}
               variant="secondary"
@@ -205,7 +296,7 @@ const ProfilePage = () => {
           )}
         </div>
 
-        {authUser?.id === profile.userId && (
+        {isOwner && (
           <Button
             onClick={() => setIsCreatePostModalOpen(true)}
             className="back-button"
@@ -236,7 +327,7 @@ const ProfilePage = () => {
               <PostCard
                 key={post.id}
                 post={post}
-                isOwner={authUser?.id === post.author.id}
+                isOwner={isOwner}
                 onEdit={() => handleEditPost(post)}
                 onDelete={() => handleDeletePost(post.id)}
               />
